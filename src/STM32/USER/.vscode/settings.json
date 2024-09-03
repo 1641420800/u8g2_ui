@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "u8g2_ui.h": "c"
+        "u8g2_ui.h": "c",
+        "u8g2.h": "c",
+        "stdint.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c",
+        "u8g2_uihal.h": "c"
     }
 }

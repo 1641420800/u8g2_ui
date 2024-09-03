@@ -7,30 +7,22 @@
 #include "delay.h"
 #include "gpio.h"
 
-#include "IIC_OLED.h"
-
-
-void oled_display(u8g2_t * u8g2)
-{
-	u8g2_DrawStr(u8g2,0,20,"Hello");
-}
+#include "u8g2_ui.h"
 
 
 int main(void)
 {
-	u8g2_t u8g2;
-	delay_init();	   		// ÑÓÊ±º¯Êý³õÊ¼»¯	  
-	gpio_init();		  		// ³õÊ¼»¯ÓëÍâÉèÁ¬½ÓµÄÓ²¼þ½Ó¿Ú
+	u8g2Ui_t * u8g2Ui = new_u8g2Ui();
+	delay_init();						// å»¶æ—¶å‡½æ•°åˆå§‹åŒ–	  
+	gpio_init();						// åˆå§‹åŒ–ä¸Žå¤–è®¾è¿žæŽ¥çš„ç¡¬ä»¶æŽ¥å£
 	
-	oled_u8g2_init(&u8g2);	// ³õÊ¼»¯OLED
+	u8g2_ui_init(u8g2Ui);
 	// u8g2_SetFont(&u8g2,u8g2_font_10x20_mf);
-	u8g2_SetFont(&u8g2,u8g2_font_8x13_mf);
+	u8g2_SetFont(&u8g2Ui->u8g2,u8g2_font_8x13_mf);
 	
 	while(1)
 	{
-		u8g2_ClearBuffer(&u8g2);
-		oled_display(&u8g2);
-		u8g2_SendBuffer(&u8g2);
+		u8g2_ui_run(u8g2Ui);
 		LED;
 	}
 }
