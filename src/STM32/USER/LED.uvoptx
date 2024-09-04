@@ -1076,8 +1076,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\HARDWARE\U8g2_user\u8g2_uiHal.c</PathWithFileName>
-      <FilenameWithoutPath>u8g2_uiHal.c</FilenameWithoutPath>
+      <PathWithFileName>..\HARDWARE\U8g2_user\u8g2_uiCore.c</PathWithFileName>
+      <FilenameWithoutPath>u8g2_uiCore.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1089,8 +1089,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\HARDWARE\U8g2_user\u8g2_uiCore.c</PathWithFileName>
-      <FilenameWithoutPath>u8g2_uiCore.c</FilenameWithoutPath>
+      <PathWithFileName>..\HARDWARE\U8g2_user\u8g2_uiText.c</PathWithFileName>
+      <FilenameWithoutPath>u8g2_uiText.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

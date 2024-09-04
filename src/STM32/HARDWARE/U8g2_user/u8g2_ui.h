@@ -10,6 +10,16 @@
 #define u8g2Ui_malloc malloc
 #define u8g2Ui_free free
 
+#define u8g2Ui_text_import
+
+#define TYPE_CAST(p,Type) ((void*)((p) ? (((u8g2Ui_basic_t*)p)->type) == (Type) ? (p) : NULL : NULL))
+typedef enum
+{
+    Ui_Type_ui_basic,
+    Ui_Type_ui,
+    Ui_Type_ui_text,
+} u8g2Ui_Type_t;
+
 typedef enum
 {
     Ui_eType_click,
@@ -37,12 +47,51 @@ typedef struct U8G2Ui_BASIC
     void (*display)(struct U8G2Ui_BASIC *p);
     uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
 
+    u8g2Ui_Type_t type;
 } u8g2Ui_basic_t;
-
+/*
+void u8g2Ui_init(struct U8G2Ui_BASIC *p)
+{
+    u8g2Ui_text_t * _p = TYPE_CAST(p, Ui_Type_ui_basic);
+    if (!_p)
+    {
+        // todo
+        return;
+    }
+}
+void u8g2Ui_deInit(struct U8G2Ui_BASIC *p)
+{
+    u8g2Ui_text_t * _p = TYPE_CAST(p, Ui_Type_ui_basic);
+    if (!_p)
+    {
+        // todo
+        return;
+    }
+}
+void u8g2Ui_display(struct U8G2Ui_BASIC *p)
+{
+    u8g2Ui_text_t * _p = TYPE_CAST(p, Ui_Type_ui_basic);
+    if (!_p)
+    {
+        // todo
+        return;
+    }
+}
+uint8_t u8g2Ui_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+{
+    u8g2Ui_text_t * _p = TYPE_CAST(p, Ui_Type_ui_basic);
+    if (!_p)
+    {
+        // todo
+        return 0;
+    }
+    return 0;
+}
+*/
 /* ----------------------------| u8g2_uiList.c |---------------------------- */
 
-uint8_t u8g2_uiList_bind(struct U8G2Ui_BASIC *p_father, struct U8G2Ui_BASIC *p);
-uint8_t u8g2_uiList_unbind(struct U8G2Ui_BASIC *p);
+uint8_t u8g2Ui_list_bind(struct U8G2Ui_BASIC *p_father, struct U8G2Ui_BASIC *p);
+uint8_t u8g2Ui_list_unbind(struct U8G2Ui_BASIC *p);
 
 /* ----------------------------| u8g2_ui.c |---------------------------- */
 
@@ -53,11 +102,43 @@ typedef struct
 } u8g2Ui_t;
 
 u8g2Ui_t *new_u8g2Ui(void);
+u8g2_t *u8g2Ui_getU8g2(void *p);
 
+/* ----------------------------| u8g2_uiText.c |---------------------------- */
+#ifdef u8g2Ui_text_import
+
+typedef struct
+{
+    u8g2Ui_basic_t basic;
+    char *text;
+    uint16_t textLen;
+    uint8_t isMultiline;
+    uint8_t isVisible;
+    u8g2_uint_t borderSize;
+    u8g2_uint_t cornerRadius;
+} u8g2Ui_text_t;
+
+u8g2Ui_text_t *new_u8g2Ui_text(void *p, char *text);
+u8g2Ui_text_t *new_u8g2Ui_textBuff(void *p, uint16_t textLen);
+
+char *u8g2Ui_text_get_text(void *p);
+void u8g2Ui_text_set_text(void *p, const char *text);
+uint8_t u8g2Ui_text_get_isMultiline(void *p);
+void u8g2Ui_text_set_isMultiline(void *p, uint8_t isMultiline);
+uint8_t u8g2Ui_text_get_isVisible(void *p);
+void u8g2Ui_text_set_isVisible(void *p, uint8_t isVisible);
+u8g2_uint_t u8g2Ui_text_get_borderSize(void *p);
+void u8g2Ui_text_set_borderSize(void *p, u8g2_uint_t borderSize);
+u8g2_uint_t u8g2Ui_text_get_cornerRadius(void *p);
+void u8g2Ui_text_set_cornerRadius(void *p, u8g2_uint_t cornerRadius);
+
+#endif
 /* ----------------------------| u8g2_uiCore.c |---------------------------- */
 
-void u8g2_ui_init(u8g2Ui_t* p);
+void u8g2_ui_init(u8g2Ui_t *p);
 void u8g2_ui_run(u8g2Ui_t *p);
 void u8g2_ui_delete(void *p);
+void u8g2_uiGetPosSize(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize);
+void u8g2_uiClipWindow(u8g2Ui_basic_t *p);
 
 #endif

@@ -5,6 +5,7 @@
         "stdint.h": "c",
         "stdlib.h": "c",
         "stdio.h": "c",
-        "u8g2_uihal.h": "c"
+        "u8g2_uihal.h": "c",
+        "iic_oled.h": "c"
     }
 }
