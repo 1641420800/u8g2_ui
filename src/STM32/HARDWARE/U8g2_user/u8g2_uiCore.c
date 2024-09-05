@@ -24,19 +24,19 @@ void u8g2_ui_init_call(u8g2Ui_basic_t *p)
     }
 }
 
-void u8g2_ui_run(u8g2Ui_t *p)
+void u8g2Ui_run(u8g2Ui_t *p)
 {
     u8g2_ClearBuffer(&p->u8g2);
     u8g2_ui_run_display(&p->basic);
     u8g2_SendBuffer(&p->u8g2);
 }
 
-void u8g2_ui_init(u8g2Ui_t *p)
+void u8g2Ui_init(u8g2Ui_t *p)
 {
     u8g2_ui_init_call(&p->basic);
 }
 
-void u8g2_ui_delete(void *p)
+void u8g2Ui_delete(void *p)
 {
     u8g2Ui_basic_t *u8g2Ui_basic = (u8g2Ui_basic_t *)p;
     if (!u8g2Ui_basic)
@@ -74,7 +74,7 @@ void u8g2_ui_delete(void *p)
     u8g2Ui_free(p);
 }
 
-void u8g2_uiGetPosSize(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize)
+void u8g2Ui_getClipPosSize(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize)
 {
     if (!p)
         return;
@@ -88,7 +88,7 @@ void u8g2_uiGetPosSize(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize)
     }
     *posSize = _posSize;
 }
-void u8g2_uiClipWindow(u8g2Ui_basic_t *p)
+void u8g2Ui_clipWindow(u8g2Ui_basic_t *p)
 {
     if (!p)
         return;
@@ -114,4 +114,75 @@ void u8g2_uiClipWindow(u8g2Ui_basic_t *p)
     if (_posSize.y < 0)
         _posSize.y = 0;
     u8g2_SetClipWindow(u8g2, _posSize.x, _posSize.y, _posSize.x + _posSize.w, _posSize.y + _posSize.h);
+}
+
+void u8g2Ui_getPosSize(void *p, u8g2Ui_posSize_t *posSize)
+{
+	u8g2Ui_basic_t * _p = p;
+	if(!_p || !posSize)
+	{
+		return;
+	}
+	*posSize = _p->posSize;
+}
+void u8g2Ui_setPosSize(void *p, u8g2Ui_posSize_t *posSize)
+{
+	u8g2Ui_basic_t * _p = p;
+	if(!_p || !posSize)
+	{
+		return;
+	}
+	_p->posSize = *posSize;
+}
+u8g2_long_t u8g2Ui_getPosSize_x(void *p)
+{
+	u8g2Ui_posSize_t posSize = {0};
+	u8g2Ui_getPosSize(p, &posSize);
+	return posSize.x;
+}
+void u8g2Ui_setPosSize_x(void *p, u8g2_long_t x)
+{
+	u8g2Ui_posSize_t posSize = {0};
+	u8g2Ui_getPosSize(p, &posSize);
+	posSize.x = x;
+	u8g2Ui_setPosSize(p, &posSize);
+}
+u8g2_long_t u8g2Ui_getPosSize_y(void *p)
+{
+	u8g2Ui_posSize_t posSize = {0};
+	u8g2Ui_getPosSize(p, &posSize);
+	return posSize.y;
+}
+void u8g2Ui_setPosSize_y(void *p, u8g2_long_t y)
+{
+	u8g2Ui_posSize_t posSize = {0};
+	u8g2Ui_getPosSize(p, &posSize);
+	posSize.y = y;
+	u8g2Ui_setPosSize(p, &posSize);
+}
+u8g2_uint_t u8g2Ui_getPosSize_h(void *p)
+{
+	u8g2Ui_posSize_t posSize = {0};
+	u8g2Ui_getPosSize(p, &posSize);
+	return posSize.h;
+}
+void u8g2Ui_setPosSize_h(void *p, u8g2_uint_t h)
+{
+	u8g2Ui_posSize_t posSize = {0};
+	u8g2Ui_getPosSize(p, &posSize);
+	posSize.h = h;
+	u8g2Ui_setPosSize(p, &posSize);
+}
+u8g2_uint_t u8g2Ui_getPosSize_w(void *p)
+{
+	u8g2Ui_posSize_t posSize = {0};
+	u8g2Ui_getPosSize(p, &posSize);
+	return posSize.w;
+}
+void u8g2Ui_setPosSize_w(void *p, u8g2_uint_t w)
+{
+	u8g2Ui_posSize_t posSize = {0};
+	u8g2Ui_getPosSize(p, &posSize);
+	posSize.w = w;
+	u8g2Ui_setPosSize(p, &posSize);
 }

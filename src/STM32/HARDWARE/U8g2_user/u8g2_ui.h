@@ -135,10 +135,21 @@ void u8g2Ui_text_set_cornerRadius(void *p, u8g2_uint_t cornerRadius);
 #endif
 /* ----------------------------| u8g2_uiCore.c |---------------------------- */
 
-void u8g2_ui_init(u8g2Ui_t *p);
-void u8g2_ui_run(u8g2Ui_t *p);
-void u8g2_ui_delete(void *p);
-void u8g2_uiGetPosSize(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize);
-void u8g2_uiClipWindow(u8g2Ui_basic_t *p);
+void u8g2Ui_init(u8g2Ui_t *p);
+void u8g2Ui_run(u8g2Ui_t *p);
+void u8g2Ui_delete(void *p);
+void u8g2Ui_getClipPosSize(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize);
+void u8g2Ui_clipWindow(u8g2Ui_basic_t *p);
+void u8g2Ui_getPosSize(void *p, u8g2Ui_posSize_t *posSize);
+void u8g2Ui_setPosSize(void *p, u8g2Ui_posSize_t *posSize);
+u8g2_long_t u8g2Ui_getPosSize_x(void *p);
+void u8g2Ui_setPosSize_x(void *p, u8g2_long_t x);
+u8g2_long_t u8g2Ui_getPosSize_y(void *p);
+void u8g2Ui_setPosSize_y(void *p, u8g2_long_t y);
+u8g2_uint_t u8g2Ui_getPosSize_h(void *p);
+void u8g2Ui_setPosSize_h(void *p, u8g2_uint_t h);
+u8g2_uint_t u8g2Ui_getPosSize_w(void *p);
+void u8g2Ui_setPosSize_w(void *p, u8g2_uint_t w);
+
 
 #endif
