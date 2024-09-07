@@ -1,7 +1,9 @@
 #include "u8g2_ui.h"
 #ifdef u8g2Ui_text_import
 
+#include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 
 void u8g2Ui_text_init(struct U8G2Ui_BASIC *p)
 {
@@ -36,15 +38,14 @@ void u8g2Ui_text_display(struct U8G2Ui_BASIC *p)
     u8g2_t * u8g2 = u8g2Ui_getU8g2(p);
     if(!u8g2)
     {
-    // todo
-    return;
+		// todo
+		return;
     }
     u8g2Ui_posSize_t posSize;
     u8g2Ui_getClipPosSize(p, &posSize);
     u8g2Ui_clipWindow(p);
-    u8g2_SetFont(u8g2,u8g2_font_8x13_mf);
+    u8g2_SetFont(u8g2, p->font);
     posSize.y += u8g2_GetAscent(u8g2);
-    
     if(_p->isMultiline)
     {
         char *_text = (char *)u8g2Ui_malloc(sizeof(char) * (strlen(_p->text) + 1));
@@ -90,19 +91,15 @@ u8g2Ui_text_t *new_u8g2Ui_text(void* p, char *text)
         // todo
         return NULL;
     }
-    u8g2Ui_text->basic.init = u8g2Ui_text_init;
-    u8g2Ui_text->basic.deInit = u8g2Ui_text_deInit;
-    u8g2Ui_text->basic.display = u8g2Ui_text_display;
-    u8g2Ui_text->basic.event = u8g2Ui_text_event;
-    u8g2Ui_text->basic.type = Ui_Type_ui_text;
-    u8g2Ui_text->basic.p_father = NULL;
-    u8g2Ui_text->basic.p_next = NULL;
-    u8g2Ui_text->basic.p_son = NULL;
-
-    u8g2Ui_text->basic.posSize.x = 0;
-    u8g2Ui_text->basic.posSize.y = 0;
-    u8g2Ui_text->basic.posSize.w = (u8g2_uint_t)~(u8g2_uint_t)0;
-    u8g2Ui_text->basic.posSize.h = (u8g2_uint_t)~(u8g2_uint_t)0;
+	
+	
+	u8g2Ui_basic_init(
+		&u8g2Ui_text->basic,
+		u8g2Ui_text_init,
+		u8g2Ui_text_deInit,
+		u8g2Ui_text_display,
+		u8g2Ui_text_event,
+		Ui_Type_ui_text);
 
     u8g2Ui_text->text = text;
     u8g2Ui_text->textLen = 0;
@@ -110,7 +107,12 @@ u8g2Ui_text_t *new_u8g2Ui_text(void* p, char *text)
     u8g2Ui_text->isVisible = 1;
 
     u8g2Ui_list_bind(p, &u8g2Ui_text->basic);
-		
+	
+	if(u8g2Ui_text->basic.p_father)
+	{
+		u8g2Ui_text->basic.font = u8g2Ui_text->basic.p_father->font;
+	}
+	
     return u8g2Ui_text;
 }
 u8g2Ui_text_t *new_u8g2Ui_textBuff(void *p, uint16_t textLen)
@@ -141,15 +143,18 @@ char *u8g2Ui_text_get_text(void *p)
     }
     return _p->text;
 }
-void u8g2Ui_text_set_text(void *p, const char *text)
+void u8g2Ui_text_set_text(void *p, const char *text, ...)
 {
+	va_list arg_ptr;
+	va_start(arg_ptr,text);
     u8g2Ui_text_t * _p = TYPE_CAST(p, Ui_Type_ui_text);
     if (!_p)
     {
         // todo
         return;
     }
-    strcpy(_p->text,text);
+	vsprintf(_p->text,text,arg_ptr);
+	va_end(arg_ptr);
 }
 uint8_t u8g2Ui_text_get_isMultiline(void* p)
 {

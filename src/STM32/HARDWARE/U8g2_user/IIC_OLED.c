@@ -83,7 +83,11 @@ uint8_t u8g2_gpio_and_delay_stm32(U8X8_UNUSED u8x8_t *u8x8, U8X8_UNUSED uint8_t 
 void oled_u8g2_init(u8g2_t *u8g2)
 {
 	OLED12864_IoInit();											//IIC OLED 端口初始化
+#ifdef u8g2Ui_fastMode
+	u8g2_Setup_ssd1306_i2c_128x64_noname_1(u8g2, U8G2_R0, u8x8_byte_sw_i2c, u8g2_gpio_and_delay_stm32);
+#else
 	u8g2_Setup_ssd1306_i2c_128x64_noname_f(u8g2, U8G2_R0, u8x8_byte_sw_i2c, u8g2_gpio_and_delay_stm32);
+#endif
 	u8g2_InitDisplay(u8g2); 
 	u8g2_SetPowerSave(u8g2, 0); 
 	u8g2_ClearDisplay(u8g2);

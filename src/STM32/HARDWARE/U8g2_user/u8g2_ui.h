@@ -10,6 +10,8 @@
 #define u8g2Ui_malloc malloc
 #define u8g2Ui_free free
 
+#define u8g2Ui_fastMode
+
 #define u8g2Ui_text_import
 
 #define TYPE_CAST(p,Type) ((void*)((p) ? (((u8g2Ui_basic_t*)p)->type) == (Type) ? (p) : NULL : NULL))
@@ -40,14 +42,15 @@ typedef struct U8G2Ui_BASIC
     struct U8G2Ui_BASIC *p_father;
     struct U8G2Ui_BASIC *p_son;
 
+    u8g2Ui_Type_t type;
     u8g2Ui_posSize_t posSize;
+	const uint8_t *font;
 
     void (*init)(struct U8G2Ui_BASIC *p);
     void (*deInit)(struct U8G2Ui_BASIC *p);
     void (*display)(struct U8G2Ui_BASIC *p);
     uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
 
-    u8g2Ui_Type_t type;
 } u8g2Ui_basic_t;
 /*
 void u8g2Ui_init(struct U8G2Ui_BASIC *p)
@@ -114,27 +117,22 @@ typedef struct
     uint16_t textLen;
     uint8_t isMultiline;
     uint8_t isVisible;
-    u8g2_uint_t borderSize;
-    u8g2_uint_t cornerRadius;
 } u8g2Ui_text_t;
 
 u8g2Ui_text_t *new_u8g2Ui_text(void *p, char *text);
 u8g2Ui_text_t *new_u8g2Ui_textBuff(void *p, uint16_t textLen);
 
 char *u8g2Ui_text_get_text(void *p);
-void u8g2Ui_text_set_text(void *p, const char *text);
+void u8g2Ui_text_set_text(void *p, const char *text, ...);
 uint8_t u8g2Ui_text_get_isMultiline(void *p);
 void u8g2Ui_text_set_isMultiline(void *p, uint8_t isMultiline);
 uint8_t u8g2Ui_text_get_isVisible(void *p);
 void u8g2Ui_text_set_isVisible(void *p, uint8_t isVisible);
-u8g2_uint_t u8g2Ui_text_get_borderSize(void *p);
-void u8g2Ui_text_set_borderSize(void *p, u8g2_uint_t borderSize);
-u8g2_uint_t u8g2Ui_text_get_cornerRadius(void *p);
-void u8g2Ui_text_set_cornerRadius(void *p, u8g2_uint_t cornerRadius);
 
 #endif
 /* ----------------------------| u8g2_uiCore.c |---------------------------- */
 
+void u8g2Ui_basic_init(u8g2Ui_basic_t *basic,void (*init)(struct U8G2Ui_BASIC *p),void (*deInit)(struct U8G2Ui_BASIC *p),void (*display)(struct U8G2Ui_BASIC *p),uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue),u8g2Ui_Type_t type);
 void u8g2Ui_init(u8g2Ui_t *p);
 void u8g2Ui_run(u8g2Ui_t *p);
 void u8g2Ui_delete(void *p);
@@ -150,6 +148,8 @@ u8g2_uint_t u8g2Ui_getPosSize_h(void *p);
 void u8g2Ui_setPosSize_h(void *p, u8g2_uint_t h);
 u8g2_uint_t u8g2Ui_getPosSize_w(void *p);
 void u8g2Ui_setPosSize_w(void *p, u8g2_uint_t w);
+const uint8_t *u8g2Ui_getFont(void *p);
+void u8g2Ui_setFont(void *p, const uint8_t *font);
 
 
 #endif

@@ -15,23 +15,22 @@ int main(void)
 	u8g2Ui_t * u8g2Ui = new_u8g2Ui();
 	u8g2_t * u8g2 = u8g2Ui_getU8g2(u8g2Ui);
 
-	u8g2Ui_text_t * u8g2Ui_text = new_u8g2Ui_textBuff(u8g2Ui, 32);
-	u8g2Ui_text_set_text(u8g2Ui_text, "Hello");
-	u8g2Ui_setPosSize_x(u8g2Ui_text,0);
-	u8g2Ui_setPosSize_y(u8g2Ui_text,0);
+	u8g2Ui_basic_t * u8g2Ui_basic = &u8g2Ui->basic;
+	for(int i = 0; i < 5; i++)
+	{
+		u8g2Ui_text_t * u8g2Ui_text = new_u8g2Ui_textBuff(u8g2Ui_basic, 32);
+		u8g2Ui_text_set_text(u8g2Ui_text, "Hello %d", i);
+		u8g2Ui_setPosSize_x(u8g2Ui_text,i&1?-10:10);
+		u8g2Ui_setPosSize_y(u8g2Ui_text,10);
+		u8g2Ui_basic = &u8g2Ui_text->basic;
+	}
+	u8g2Ui_setPosSize_w(u8g2Ui->basic.p_son,64);
 	
-	u8g2Ui_text_t * u8g2Ui_text2 = new_u8g2Ui_textBuff(u8g2Ui_text, 32);
-	u8g2Ui_text_set_text(u8g2Ui_text2, "Hello2\nHello2");
-	u8g2Ui_text_set_isMultiline(u8g2Ui_text2, 1);
-	u8g2Ui_setPosSize_x(u8g2Ui_text2,10);
-	u8g2Ui_setPosSize_y(u8g2Ui_text2,10);
 	
 	delay_init();						// 延时函数初始化	  
 	gpio_init();						// 初始化与外设连接的硬件接口
 	
 	u8g2Ui_init(u8g2Ui);
-	// u8g2_SetFont(u8g2,u8g2_font_10x20_mf);
-//	u8g2_SetFont(u8g2,u8g2_font_8x13_mf);
 	
 	while(1)
 	{
