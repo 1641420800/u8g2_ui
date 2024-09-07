@@ -1,9 +1,8 @@
 #include "u8g2_ui.h"
 
-
-void u8g2Ui_basic_init(u8g2Ui_basic_t *basic,void (*init)(struct U8G2Ui_BASIC *p),void (*deInit)(struct U8G2Ui_BASIC *p),void (*display)(struct U8G2Ui_BASIC *p),uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue),u8g2Ui_Type_t type)
+void u8g2Ui_basic_init(u8g2Ui_basic_t *basic, void (*init)(struct U8G2Ui_BASIC *p), void (*deInit)(struct U8G2Ui_BASIC *p), void (*display)(struct U8G2Ui_BASIC *p), uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue), u8g2Ui_Type_t type)
 {
-	
+
     basic->init = init;
     basic->deInit = deInit;
     basic->display = display;
@@ -13,11 +12,11 @@ void u8g2Ui_basic_init(u8g2Ui_basic_t *basic,void (*init)(struct U8G2Ui_BASIC *p
     basic->p_next = NULL;
     basic->p_son = NULL;
     basic->font = u8g2_font_8x13_mf;
-    
+
     basic->posSize.x = 0;
     basic->posSize.y = 0;
-    basic->posSize.w = (u8g2_uint_t)~(u8g2_uint_t)0;
-    basic->posSize.h = (u8g2_uint_t)~(u8g2_uint_t)0;
+    basic->posSize.w = (u8g2_uint_t) ~(u8g2_uint_t)0;
+    basic->posSize.h = (u8g2_uint_t) ~(u8g2_uint_t)0;
 }
 
 void u8g2_ui_run_display(u8g2Ui_basic_t *p)
@@ -48,10 +47,10 @@ void u8g2Ui_run(u8g2Ui_t *p)
 {
 #ifdef u8g2Ui_fastMode
     u8g2_ui_run_display(&p->basic);
-	if(!u8g2_NextPage(&p->u8g2))
-	{
-		u8g2_FirstPage(&p->u8g2);
-	}
+    if (!u8g2_NextPage(&p->u8g2))
+    {
+        u8g2_FirstPage(&p->u8g2);
+    }
 #else
     u8g2_ClearBuffer(&p->u8g2);
     u8g2_ui_run_display(&p->basic);
@@ -124,117 +123,115 @@ void u8g2Ui_clipWindow(u8g2Ui_basic_t *p)
     if (!u8g2)
         return;
     u8g2Ui_posSize_t _posSize = p->posSize;
-	u8g2_long_t x_max = _posSize.x;
-	u8g2_long_t y_max = _posSize.y;
+    u8g2_long_t x_max = _posSize.x > 0 ? _posSize.x : 0;
+    u8g2_long_t y_max = _posSize.y > 0 ? _posSize.y : 0;
     p = p->p_father;
     while (p)
     {
         _posSize.x += p->posSize.x;
         _posSize.y += p->posSize.y;
+        x_max += p->posSize.x;
+        y_max += p->posSize.x;
+        if(x_max < 0) x_max = 0;
+        if(y_max < 0) y_max = 0;
         u8g2_long_t x0 = _posSize.x + _posSize.w;
         u8g2_long_t y0 = _posSize.y + _posSize.h;
         u8g2_long_t x1 = p->posSize.x + p->posSize.w;
         u8g2_long_t y1 = p->posSize.y + p->posSize.h;
         _posSize.w = (x0 < x1 ? x0 : x1) - _posSize.x;
         _posSize.h = (y0 < y1 ? y0 : y1) - _posSize.y;
-		if(x_max < _posSize.x) x_max = _posSize.x;
-		if(y_max < _posSize.y) y_max = _posSize.y;
         p = p->p_father;
     }
-	_posSize.x = x_max;
-	_posSize.y = y_max;
-    if (_posSize.x < 0)
-        _posSize.x = 0;
-    if (_posSize.y < 0)
-        _posSize.y = 0;
+    _posSize.x = x_max;
+    _posSize.y = y_max;
     u8g2_SetClipWindow(u8g2, _posSize.x, _posSize.y, _posSize.x + _posSize.w, _posSize.y + _posSize.h);
 }
 
 void u8g2Ui_getPosSize(void *p, u8g2Ui_posSize_t *posSize)
 {
-	u8g2Ui_basic_t * _p = p;
-	if(!_p || !posSize)
-	{
-		return;
-	}
-	*posSize = _p->posSize;
+    u8g2Ui_basic_t *_p = p;
+    if (!_p || !posSize)
+    {
+        return;
+    }
+    *posSize = _p->posSize;
 }
 void u8g2Ui_setPosSize(void *p, u8g2Ui_posSize_t *posSize)
 {
-	u8g2Ui_basic_t * _p = p;
-	if(!_p || !posSize)
-	{
-		return;
-	}
-	_p->posSize = *posSize;
+    u8g2Ui_basic_t *_p = p;
+    if (!_p || !posSize)
+    {
+        return;
+    }
+    _p->posSize = *posSize;
 }
 u8g2_long_t u8g2Ui_getPosSize_x(void *p)
 {
-	u8g2Ui_posSize_t posSize = {0};
-	u8g2Ui_getPosSize(p, &posSize);
-	return posSize.x;
+    u8g2Ui_posSize_t posSize = {0};
+    u8g2Ui_getPosSize(p, &posSize);
+    return posSize.x;
 }
 void u8g2Ui_setPosSize_x(void *p, u8g2_long_t x)
 {
-	u8g2Ui_posSize_t posSize = {0};
-	u8g2Ui_getPosSize(p, &posSize);
-	posSize.x = x;
-	u8g2Ui_setPosSize(p, &posSize);
+    u8g2Ui_posSize_t posSize = {0};
+    u8g2Ui_getPosSize(p, &posSize);
+    posSize.x = x;
+    u8g2Ui_setPosSize(p, &posSize);
 }
 u8g2_long_t u8g2Ui_getPosSize_y(void *p)
 {
-	u8g2Ui_posSize_t posSize = {0};
-	u8g2Ui_getPosSize(p, &posSize);
-	return posSize.y;
+    u8g2Ui_posSize_t posSize = {0};
+    u8g2Ui_getPosSize(p, &posSize);
+    return posSize.y;
 }
 void u8g2Ui_setPosSize_y(void *p, u8g2_long_t y)
 {
-	u8g2Ui_posSize_t posSize = {0};
-	u8g2Ui_getPosSize(p, &posSize);
-	posSize.y = y;
-	u8g2Ui_setPosSize(p, &posSize);
+    u8g2Ui_posSize_t posSize = {0};
+    u8g2Ui_getPosSize(p, &posSize);
+    posSize.y = y;
+    u8g2Ui_setPosSize(p, &posSize);
 }
 u8g2_uint_t u8g2Ui_getPosSize_h(void *p)
 {
-	u8g2Ui_posSize_t posSize = {0};
-	u8g2Ui_getPosSize(p, &posSize);
-	return posSize.h;
+    u8g2Ui_posSize_t posSize = {0};
+    u8g2Ui_getPosSize(p, &posSize);
+    return posSize.h;
 }
 void u8g2Ui_setPosSize_h(void *p, u8g2_uint_t h)
 {
-	u8g2Ui_posSize_t posSize = {0};
-	u8g2Ui_getPosSize(p, &posSize);
-	posSize.h = h;
-	u8g2Ui_setPosSize(p, &posSize);
+    u8g2Ui_posSize_t posSize = {0};
+    u8g2Ui_getPosSize(p, &posSize);
+    posSize.h = h;
+    u8g2Ui_setPosSize(p, &posSize);
 }
 u8g2_uint_t u8g2Ui_getPosSize_w(void *p)
 {
-	u8g2Ui_posSize_t posSize = {0};
-	u8g2Ui_getPosSize(p, &posSize);
-	return posSize.w;
+    u8g2Ui_posSize_t posSize = {0};
+    u8g2Ui_getPosSize(p, &posSize);
+    return posSize.w;
 }
 void u8g2Ui_setPosSize_w(void *p, u8g2_uint_t w)
 {
-	u8g2Ui_posSize_t posSize = {0};
-	u8g2Ui_getPosSize(p, &posSize);
-	posSize.w = w;
-	u8g2Ui_setPosSize(p, &posSize);
+    u8g2Ui_posSize_t posSize = {0};
+    u8g2Ui_getPosSize(p, &posSize);
+    posSize.w = w;
+    u8g2Ui_setPosSize(p, &posSize);
 }
 const uint8_t *u8g2Ui_getFont(void *p)
 {
-	u8g2Ui_basic_t * _p = p;
-	if(!_p)
-	{
-		return NULL;
-	}
-	return _p->font;
+    u8g2Ui_basic_t *_p = p;
+    if (!_p)
+    {
+        return NULL;
+    }
+    return _p->font;
 }
 void u8g2Ui_setFont(void *p, const uint8_t *font)
 {
-	u8g2Ui_basic_t * _p = p;
-	if(!_p || !font)
-	{
-		return;
-	}
-	_p->font = font;
+    u8g2Ui_basic_t *_p = p;
+    if (!_p || !font)
+    {
+        return;
+    }
+    _p->font = font;
 }

@@ -33,13 +33,13 @@ u8g2Ui_t *new_u8g2Ui(void)
         // todo
         return NULL;
     }
-	u8g2Ui_basic_init(
-		&u8g2Ui->basic,
-		u8g2Ui_Init,
-		u8g2Ui_deInit,
-		u8g2Ui_display,
-		u8g2Ui_event,
-		Ui_Type_ui);
+    u8g2Ui_basic_init(
+        &u8g2Ui->basic,
+        u8g2Ui_Init,
+        u8g2Ui_deInit,
+        u8g2Ui_display,
+        u8g2Ui_event,
+        Ui_Type_ui);
 
     return u8g2Ui;
 }
