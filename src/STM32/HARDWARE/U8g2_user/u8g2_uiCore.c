@@ -7,6 +7,7 @@ void u8g2Ui_basic_init(u8g2Ui_basic_t *basic, void (*init)(struct U8G2Ui_BASIC *
     basic->deInit = deInit;
     basic->display = display;
     basic->event = event;
+    basic->userEvent = NULL;
     basic->type = type;
     basic->p_father = NULL;
     basic->p_next = NULL;
@@ -234,4 +235,75 @@ void u8g2Ui_setFont(void *p, const uint8_t *font)
         return;
     }
     _p->font = font;
+}
+void u8g2Ui_callEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+{
+    while (p)
+    {
+        if(p->userEvent && p->userEvent(p,EType,EValue))
+        {
+            return;
+        }
+        if(p->event && p->event(p,EType,EValue))
+        {
+            return;
+        }
+        p = p->p_father;
+    }
+}
+uint8_t u8g2Ui_basicEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+{
+    if(!p)
+        return 0;
+    if(EType == Ui_eType_setX)
+    {
+        u8g2Ui_setPosSize_x(p,EValue);
+        return 1;
+    }
+    if(EType == Ui_eType_setY)
+    {
+        u8g2Ui_setPosSize_y(p,EValue);
+        return 1;
+    }
+    if(EType == Ui_eType_setW)
+    {
+        u8g2Ui_setPosSize_w(p,EValue);
+        return 1;
+    }
+    if(EType == Ui_eType_setH)
+    {
+        u8g2Ui_setPosSize_h(p,EValue);
+        return 1;
+    }
+    if(EType == Ui_eType_setFont)
+    {
+        u8g2Ui_setFont(p,(const uint8_t *)EValue);
+        return 1;
+    }
+    if(EType == Ui_eType_getX)
+    {
+        *(u8g2_long_t*)EValue = u8g2Ui_getPosSize_x(p);
+        return 1;
+    }
+    if(EType == Ui_eType_getY)
+    {
+        *(u8g2_long_t*)EValue = u8g2Ui_getPosSize_y(p);
+        return 1;
+    }
+    if(EType == Ui_eType_getW)
+    {
+        *(u8g2_uint_t*)EValue = u8g2Ui_getPosSize_w(p);
+        return 1;
+    }
+    if(EType == Ui_eType_getH)
+    {
+        *(u8g2_uint_t*)EValue = u8g2Ui_getPosSize_h(p);
+        return 1;
+    }
+    if(EType == Ui_eType_getFont)
+    {
+        *(const uint8_t **)EValue = u8g2Ui_getFont(p);
+        return 1;
+    }
+    return 0;
 }

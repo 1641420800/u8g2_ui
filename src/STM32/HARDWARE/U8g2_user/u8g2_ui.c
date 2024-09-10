@@ -22,7 +22,7 @@ uint8_t u8g2Ui_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
 {
     if (!p && p->type == Ui_Type_ui)
         return 0;
-    return 0;
+    return u8g2Ui_basicEvent(p,EType,EValue);
 }
 
 u8g2Ui_t *new_u8g2Ui(void)

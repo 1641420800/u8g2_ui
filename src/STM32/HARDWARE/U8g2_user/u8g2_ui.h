@@ -14,6 +14,7 @@
 
 #define u8g2Ui_text_import
 
+
 #define TYPE_CAST(p,Type) ((void*)((p) ? (((u8g2Ui_basic_t*)p)->type) == (Type) ? (p) : NULL : NULL))
 typedef enum
 {
@@ -26,6 +27,20 @@ typedef enum
 {
     Ui_eType_click,
     Ui_eType_delete,
+    Ui_eType_getContentH,
+    Ui_eType_getContentW,
+
+    // 公共事件
+    Ui_eType_setX,
+    Ui_eType_setY,
+    Ui_eType_setW,
+    Ui_eType_setH,
+    Ui_eType_setFont,
+    Ui_eType_getX,
+    Ui_eType_getY,
+    Ui_eType_getW,
+    Ui_eType_getH,
+    Ui_eType_getFont,
 } u8g2Ui_eType_t;
 
 typedef struct
@@ -50,6 +65,7 @@ typedef struct U8G2Ui_BASIC
     void (*deInit)(struct U8G2Ui_BASIC *p);
     void (*display)(struct U8G2Ui_BASIC *p);
     uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
+    uint8_t (*userEvent)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
 
 } u8g2Ui_basic_t;
 /*
@@ -88,7 +104,7 @@ uint8_t u8g2Ui_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
         // todo
         return 0;
     }
-    return 0;
+    return u8g2Ui_basicEvent(p,EType,EValue);
 }
 */
 /* ----------------------------| u8g2_uiList.c |---------------------------- */
@@ -128,6 +144,9 @@ uint8_t u8g2Ui_text_get_isMultiline(void *p);
 void u8g2Ui_text_set_isMultiline(void *p, uint8_t isMultiline);
 uint8_t u8g2Ui_text_get_isVisible(void *p);
 void u8g2Ui_text_set_isVisible(void *p, uint8_t isVisible);
+u8g2_uint_t u8g2Ui_text_get_contentH(void *p);
+u8g2_uint_t u8g2Ui_text_get_contentW(void *p);
+
 
 #endif
 /* ----------------------------| u8g2_uiCore.c |---------------------------- */
@@ -150,6 +169,7 @@ u8g2_uint_t u8g2Ui_getPosSize_w(void *p);
 void u8g2Ui_setPosSize_w(void *p, u8g2_uint_t w);
 const uint8_t *u8g2Ui_getFont(void *p);
 void u8g2Ui_setFont(void *p, const uint8_t *font);
+uint8_t u8g2Ui_basicEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
 
 
 #endif
