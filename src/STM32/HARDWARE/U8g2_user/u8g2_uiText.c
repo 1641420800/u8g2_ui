@@ -5,6 +5,36 @@
 #include <string.h>
 #include <stdarg.h>
 
+char *my_strtok(char *text, char c)
+{
+    static char *p;
+    if (text)
+        p = text;
+    else
+    {
+        if (!p)
+            return NULL;
+        while (*p)
+            p++;
+        *p = c;
+        p++;
+    }
+    char *q = p;
+    while (*q && *q != c)
+        q++;
+    if (*q == '\0')
+    {
+        q = p;
+        p = NULL;
+    }
+    else
+    {
+        *q = '\0';
+        q = p;
+    }
+    return q;
+}
+
 void u8g2Ui_text_init(struct U8G2Ui_BASIC *p)
 {
     u8g2Ui_text_t *_p = TYPE_CAST(p, Ui_Type_ui_text);
@@ -48,21 +78,13 @@ void u8g2Ui_text_display(struct U8G2Ui_BASIC *p)
     posSize.y += u8g2_GetAscent(u8g2);
     if (_p->isMultiline)
     {
-        char *_text = (char *)u8g2Ui_malloc(sizeof(char) * (strlen(_p->text) + 1));
-        if (!_text)
-        {
-            // todo
-            return;
-        }
-        strcpy(_text, _p->text);
-        char *token = strtok(_text, "\n");
+        char *token = my_strtok(_p->text, '\n');
         while (token != NULL)
         {
             u8g2_DrawUTF8(u8g2, posSize.x, posSize.y, token);
             posSize.y += u8g2_GetMaxCharHeight(u8g2);
-            token = strtok(NULL, "\n");
+            token = my_strtok(NULL, '\n');
         }
-        u8g2Ui_free(_text);
     }
     else
     {
@@ -77,8 +99,19 @@ uint8_t u8g2Ui_text_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EVal
         // todo
         return 0;
     }
-    return 0;
+    if (EType == Ui_eType_getContentH)
+    {
+        *(u8g2_uint_t*)EValue = u8g2Ui_text_get_contentH(_p);
+        return 1;
+    }
+    if (EType == Ui_eType_getContentW)
+    {
+        *(u8g2_uint_t*)EValue = u8g2Ui_text_get_contentW(_p);
+        return 1;
+    }
+    return u8g2Ui_basicEvent(p, EType, EValue);
 }
+
 u8g2Ui_text_t *new_u8g2Ui_text(void *p, char *text)
 {
     if (!p || !text)
@@ -195,5 +228,60 @@ void u8g2Ui_text_set_isVisible(void *p, uint8_t isVisible)
         return;
     }
     _p->isVisible = isVisible;
+}
+u8g2_uint_t u8g2Ui_text_get_contentW(void *p)
+{
+    u8g2Ui_text_t *_p = TYPE_CAST(p, Ui_Type_ui_text);
+    if (!_p)
+    {
+        // todo
+        return 0;
+    }
+    u8g2_t *u8g2 = u8g2Ui_getU8g2(p);
+    if (!u8g2)
+    {
+        // todo
+        return 0;
+    }
+    u8g2_uint_t ret = 0;
+    if (_p->isMultiline)
+    {
+        char *token = my_strtok(_p->text, '\n');
+        while (token != NULL)
+        {
+            u8g2_uint_t w = u8g2_GetUTF8Width(u8g2, token);
+            if(ret < w) ret = w;
+        }
+    }
+    else
+    {
+        ret = u8g2_GetUTF8Width(u8g2, _p->text);
+    }
+    return ret;
+}
+u8g2_uint_t u8g2Ui_text_get_contentH(void *p)
+{
+    u8g2Ui_text_t *_p = TYPE_CAST(p, Ui_Type_ui_text);
+    if (!_p)
+    {
+        // todo
+        return 0;
+    }
+    u8g2_t *u8g2 = u8g2Ui_getU8g2(p);
+    if (!u8g2)
+    {
+        // todo
+        return 0;
+    }
+    u8g2_uint_t h = u8g2_GetMaxCharHeight(u8g2);
+    u8g2_uint_t ret = h;
+    if (_p->isMultiline)
+    {
+        while(_p)
+        {
+            if(*_p->text == '\n') ret += h;
+        }
+    }
+    return ret;
 }
 #endif

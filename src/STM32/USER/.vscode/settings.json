@@ -7,5 +7,6 @@
         "stdio.h": "c",
         "u8g2_uihal.h": "c",
         "iic_oled.h": "c"
-    }
+    },
+    "C_Cpp.default.compilerPath": ""
 }
