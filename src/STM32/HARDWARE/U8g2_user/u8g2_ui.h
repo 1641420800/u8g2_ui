@@ -16,8 +16,7 @@
 #define u8g2Ui_text_import
 #define u8g2Ui_paintingFrame_import
 
-
-#define TYPE_CAST(p,Type) ((void*)((p) ? (((u8g2Ui_basic_t*)p)->type) == (Type) ? (p) : NULL : NULL))
+#define TYPE_CAST(p, Type) ((void *)((p) ? (((u8g2Ui_basic_t *)p)->type) == (Type) ? (p) : NULL : NULL))
 typedef enum
 {
     Ui_Type_ui_basic,
@@ -46,6 +45,14 @@ typedef enum
     Ui_eType_getFont,
 } u8g2Ui_eType_t;
 
+typedef enum
+{
+    LayerAND,
+    LayerOR,
+    LayerXOR,
+    LayerXNOR,
+} Layer_t;
+
 typedef struct
 {
     u8g2_long_t x;
@@ -62,7 +69,7 @@ typedef struct U8G2Ui_BASIC
 
     u8g2Ui_Type_t type;
     u8g2Ui_posSize_t posSize;
-	const uint8_t *font;
+    const uint8_t *font;
 
     void (*init)(struct U8G2Ui_BASIC *p);
     void (*deInit)(struct U8G2Ui_BASIC *p);
@@ -129,6 +136,16 @@ u8g2_t *u8g2Ui_getU8g2(void *p);
 /* ----------------------------| u8g2_uiLayer.c |---------------------------- */
 #ifdef u8g2Ui_layer_import
 
+#define layer(u8g2, layer, p)    \
+    do                           \
+    {                            \
+        u8g2Ui_startLayer(u8g2); \
+        p;                       \
+        u8g2Ui_endLayer(layer);  \
+    } while (0)
+void u8g2Ui_startLayer(u8g2_t *u8g2);
+void u8g2Ui_endLayer(Layer_t layer);
+
 #endif
 /* ----------------------------| u8g2_uiText.c |---------------------------- */
 #ifdef u8g2Ui_text_import
@@ -154,18 +171,16 @@ void u8g2Ui_text_set_isVisible(void *p, uint8_t isVisible);
 u8g2_uint_t u8g2Ui_text_get_contentH(void *p);
 u8g2_uint_t u8g2Ui_text_get_contentW(void *p);
 
-
 #endif
 /* ----------------------------| u8g2_uiPaintingFrame.c |---------------------------- */
 #ifdef u8g2Ui_paintingFrame_import
 
-typedef void(*PaintingFrame_cb)(u8g2Ui_basic_t * p, u8g2Ui_posSize_t * posSize);
+typedef void (*PaintingFrame_cb)(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize);
 typedef struct
 {
     u8g2Ui_basic_t basic;
     PaintingFrame_cb cb;
 } u8g2Ui_paintingFrame_t;
-
 
 u8g2Ui_paintingFrame_t *new_u8g2Ui_paintingFrame(void *p, PaintingFrame_cb cb);
 PaintingFrame_cb u8g2Ui_paintingFrame_get_cb(void *p);
@@ -174,7 +189,7 @@ void u8g2Ui_paintingFrame_set_cb(void *p, PaintingFrame_cb cb);
 #endif
 /* ----------------------------| u8g2_uiCore.c |---------------------------- */
 
-void u8g2Ui_basic_init(u8g2Ui_basic_t *basic,void (*init)(struct U8G2Ui_BASIC *p),void (*deInit)(struct U8G2Ui_BASIC *p),void (*display)(struct U8G2Ui_BASIC *p),uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue),u8g2Ui_Type_t type);
+void u8g2Ui_basic_init(u8g2Ui_basic_t *basic, void (*init)(struct U8G2Ui_BASIC *p), void (*deInit)(struct U8G2Ui_BASIC *p), void (*display)(struct U8G2Ui_BASIC *p), uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue), u8g2Ui_Type_t type);
 void u8g2Ui_init(u8g2Ui_t *p);
 void u8g2Ui_run(u8g2Ui_t *p);
 void u8g2Ui_delete(void *p);
@@ -193,6 +208,5 @@ void u8g2Ui_setPosSize_w(void *p, u8g2_uint_t w);
 const uint8_t *u8g2Ui_getFont(void *p);
 void u8g2Ui_setFont(void *p, const uint8_t *font);
 uint8_t u8g2Ui_basicEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
-
 
 #endif
