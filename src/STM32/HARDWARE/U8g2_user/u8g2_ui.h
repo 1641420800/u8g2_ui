@@ -15,6 +15,7 @@
 #define u8g2Ui_layer_import
 #define u8g2Ui_text_import
 #define u8g2Ui_paintingFrame_import
+#define u8g2Ui_starrySky_import
 
 #define TYPE_CAST(p, Type) ((void *)((p) ? (((u8g2Ui_basic_t *)p)->type) == (Type) ? (p) : NULL : NULL))
 typedef enum
@@ -23,6 +24,7 @@ typedef enum
     Ui_Type_ui,
     Ui_Type_ui_text,
     Ui_Type_ui_paintingFrame,
+    Ui_Type_ui_starrySky,
 } u8g2Ui_Type_t;
 
 typedef enum
@@ -185,6 +187,28 @@ typedef struct
 u8g2Ui_paintingFrame_t *new_u8g2Ui_paintingFrame(void *p, PaintingFrame_cb cb);
 PaintingFrame_cb u8g2Ui_paintingFrame_get_cb(void *p);
 void u8g2Ui_paintingFrame_set_cb(void *p, PaintingFrame_cb cb);
+
+#endif
+/* ----------------------------| u8g2_uiStarrySky.c |---------------------------- */
+#ifdef u8g2Ui_starrySky_import
+typedef struct
+{
+    u8g2_int_t x;
+    u8g2_int_t y;
+    u8g2_int_t siz;
+    
+    u8g2_uint_t effective;
+} u8g2_stars_t;
+
+typedef struct
+{
+    u8g2Ui_basic_t basic;
+    u8g2_stars_t * stars;
+    size_t maximumQuantity;
+    // todo:速度和方向
+} u8g2Ui_starrySky_t;
+
+u8g2Ui_starrySky_t *new_u8g2Ui_starrySky(void *p, size_t maximumQuantity);
 
 #endif
 /* ----------------------------| u8g2_uiCore.c |---------------------------- */

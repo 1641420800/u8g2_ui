@@ -9,16 +9,7 @@
 
 #include "u8g2_ui.h"
 
-void PaintingFrame(u8g2Ui_basic_t * p, u8g2Ui_posSize_t * posSize)
-{
-	
-	
-	u8g2_t * u8g2 = u8g2Ui_getU8g2(p);
-	u8g2_DrawUTF8(u8g2,10,15,"test");
-	
-	layer(u8g2,LayerXOR,u8g2_DrawRBox(u8g2,5,1,42,15,7));
 
-}
 
 int main(void)
 {
@@ -26,7 +17,7 @@ int main(void)
 	u8g2_t *u8g2 = u8g2Ui_getU8g2(u8g2Ui);
 
 	
-	u8g2Ui_paintingFrame_t * u8g2Ui_paintingFrame = new_u8g2Ui_paintingFrame(u8g2Ui, PaintingFrame);
+	u8g2Ui_starrySky_t * u8g2Ui_starrySky = new_u8g2Ui_starrySky(u8g2Ui, 40);
 
 	delay_init(); // 延时函数初始化
 	gpio_init();  // 初始化与外设连接的硬件接口

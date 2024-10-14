@@ -752,6 +752,11 @@
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\U8g2_user\u8g2_uiLayer.c</FilePath>
             </File>
+            <File>
+              <FileName>u8g2_uiStarrySky.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\U8g2_user\u8g2_uiStarrySky.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
