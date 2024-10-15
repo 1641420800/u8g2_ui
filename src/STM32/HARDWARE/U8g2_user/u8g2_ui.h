@@ -193,8 +193,8 @@ void u8g2Ui_paintingFrame_set_cb(void *p, PaintingFrame_cb cb);
 #ifdef u8g2Ui_starrySky_import
 typedef struct
 {
-    u8g2_int_t x;
-    u8g2_int_t y;
+    float x;
+    float y;
     u8g2_int_t siz;
     
     u8g2_uint_t effective;
@@ -205,10 +205,24 @@ typedef struct
     u8g2Ui_basic_t basic;
     u8g2_stars_t * stars;
     size_t maximumQuantity;
-    // todo:速度和方向
+    
+    float spe;
+    u8g2_uint_t dir;
+    u8g2_uint_t genProb;
+    u8g2_uint_t maxSize;
+    
 } u8g2Ui_starrySky_t;
 
 u8g2Ui_starrySky_t *new_u8g2Ui_starrySky(void *p, size_t maximumQuantity);
+size_t u8g2Ui_starrySky_getMaximumQuantity(void *p);
+u8g2_uint_t u8g2Ui_starrySky_getDir(void *p);
+void u8g2Ui_starrySky_setDir(void *p, u8g2_uint_t dir);
+float u8g2Ui_starrySky_getSpe(void *p);
+void u8g2Ui_starrySky_setSpe(void *p, float spe);
+u8g2_uint_t u8g2Ui_starrySky_getGenProb(void *p);
+void u8g2Ui_starrySky_setGenProb(void *p, u8g2_uint_t genProb);
+u8g2_uint_t u8g2Ui_starrySky_getMaxSize(void *p);
+void u8g2Ui_starrySky_setMaxSize(void *p, u8g2_uint_t maxSize);
 
 #endif
 /* ----------------------------| u8g2_uiCore.c |---------------------------- */
