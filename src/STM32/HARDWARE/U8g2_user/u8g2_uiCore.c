@@ -307,3 +307,21 @@ uint8_t u8g2Ui_basicEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EVal
     }
     return 0;
 }
+void u8g2Ui_setUserEvent(void *p, u8g2Ui_event_t userEvent)
+{
+    u8g2Ui_basic_t *_p = p;
+    if (!_p)
+    {
+        return;
+    }
+    _p->userEvent = userEvent;
+}
+u8g2Ui_event_t u8g2Ui_getUserEvent(void *p)
+{
+    u8g2Ui_basic_t *_p = p;
+    if (!_p)
+    {
+        return NULL;
+    }
+    return _p->userEvent;
+}

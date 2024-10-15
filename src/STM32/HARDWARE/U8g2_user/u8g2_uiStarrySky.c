@@ -125,12 +125,20 @@ void u8g2Ui_starrySky_display(struct U8G2Ui_BASIC *p)
 #ifdef u8g2Ui_fastMode
     }
 #endif
+    u8g2_uint_t starsNum = 0;
     for (uint16_t i = 0; i < _p->maximumQuantity; i++)
     {
         if (_p->stars[i].effective)
         {
+            starsNum++;
             u8g2_DrawDisc(u8g2, posSize.x + _p->stars[i].x, posSize.y + _p->stars[i].y, _p->stars[i].siz + 1, U8G2_DRAW_ALL);
         }
+    }
+    
+    if(u8g2Ui_starrySky->starsNum != starsNum)
+    {
+        u8g2Ui_starrySky->starsNum = starsNum;
+        u8g2Ui_callEvent(p,Ui_eType_starrySky_starsNumChange,starsNum);
     }
 }
 uint8_t u8g2Ui_starrySky_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
@@ -176,6 +184,7 @@ u8g2Ui_starrySky_t *new_u8g2Ui_starrySky(void *p, size_t maximumQuantity)
     u8g2Ui_starrySky->spe = 1;
     u8g2Ui_starrySky->genProb = 20;
     u8g2Ui_starrySky->maxSize = 3;
+    u8g2Ui_starrySky->starsNum = 0;
 
     u8g2Ui_list_bind(p, &u8g2Ui_starrySky->basic);
 
@@ -190,6 +199,17 @@ size_t u8g2Ui_starrySky_getMaximumQuantity(void *p)
         return 0;
     }
     return _p->maximumQuantity;
+}
+void u8g2Ui_starrySky_setMaximumQuantity(void *p, size_t maximumQuantity)
+{
+    u8g2Ui_starrySky_t *_p = TYPE_CAST(p, Ui_Type_ui_starrySky);
+    if (!_p)
+    {
+        // todo
+        return;
+    }
+    _p->maximumQuantity = maximumQuantity;
+    _p->stars = (u8g2_stars_t *)u8g2Ui_realloc(_p->stars, sizeof(u8g2_stars_t) * _p->maximumQuantity);
 }
 u8g2_uint_t u8g2Ui_starrySky_getDir(void *p)
 {
@@ -270,5 +290,15 @@ void u8g2Ui_starrySky_setMaxSize(void *p, u8g2_uint_t maxSize)
         return;
     }
     _p->maxSize = maxSize;
+}
+u8g2_uint_t u8g2Ui_starrySky_getStarsNum(void *p)
+{
+    u8g2Ui_starrySky_t *_p = TYPE_CAST(p, Ui_Type_ui_starrySky);
+    if (!_p)
+    {
+        // todo
+        return 0;
+    }
+    return u8g2Ui_starrySky->starsNum;
 }
 #endif

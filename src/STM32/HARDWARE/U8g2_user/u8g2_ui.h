@@ -9,6 +9,7 @@
 
 #define u8g2Ui_malloc malloc
 #define u8g2Ui_free free
+#define u8g2Ui_realloc realloc
 
 #define u8g2Ui_fastMode
 
@@ -45,6 +46,9 @@ typedef enum
     Ui_eType_getW,
     Ui_eType_getH,
     Ui_eType_getFont,
+	
+	// 子模块事件
+    Ui_eType_starrySky_starsNumChange,
 } u8g2Ui_eType_t;
 
 typedef enum
@@ -63,6 +67,8 @@ typedef struct
     u8g2_uint_t h;
 } u8g2Ui_posSize_t;
 
+typedef uint8_t (*u8g2Ui_event_t)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
+
 typedef struct U8G2Ui_BASIC
 {
     struct U8G2Ui_BASIC *p_next;
@@ -76,8 +82,8 @@ typedef struct U8G2Ui_BASIC
     void (*init)(struct U8G2Ui_BASIC *p);
     void (*deInit)(struct U8G2Ui_BASIC *p);
     void (*display)(struct U8G2Ui_BASIC *p);
-    uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
-    uint8_t (*userEvent)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
+    u8g2Ui_event_t event;
+    u8g2Ui_event_t userEvent;
 
 } u8g2Ui_basic_t;
 /*
@@ -211,10 +217,12 @@ typedef struct
     u8g2_uint_t genProb;
     u8g2_uint_t maxSize;
     
+    u8g2_uint_t starsNum;
 } u8g2Ui_starrySky_t;
 
 u8g2Ui_starrySky_t *new_u8g2Ui_starrySky(void *p, size_t maximumQuantity);
 size_t u8g2Ui_starrySky_getMaximumQuantity(void *p);
+void u8g2Ui_starrySky_setMaximumQuantity(void *p, size_t maximumQuantity);
 u8g2_uint_t u8g2Ui_starrySky_getDir(void *p);
 void u8g2Ui_starrySky_setDir(void *p, u8g2_uint_t dir);
 float u8g2Ui_starrySky_getSpe(void *p);
@@ -223,6 +231,7 @@ u8g2_uint_t u8g2Ui_starrySky_getGenProb(void *p);
 void u8g2Ui_starrySky_setGenProb(void *p, u8g2_uint_t genProb);
 u8g2_uint_t u8g2Ui_starrySky_getMaxSize(void *p);
 void u8g2Ui_starrySky_setMaxSize(void *p, u8g2_uint_t maxSize);
+u8g2_uint_t u8g2Ui_starrySky_getStarsNum(void *p);
 
 #endif
 /* ----------------------------| u8g2_uiCore.c |---------------------------- */
@@ -245,6 +254,9 @@ u8g2_uint_t u8g2Ui_getPosSize_w(void *p);
 void u8g2Ui_setPosSize_w(void *p, u8g2_uint_t w);
 const uint8_t *u8g2Ui_getFont(void *p);
 void u8g2Ui_setFont(void *p, const uint8_t *font);
+void u8g2Ui_callEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
 uint8_t u8g2Ui_basicEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
+void u8g2Ui_setUserEvent(void *p, u8g2Ui_event_t userEvent);
+u8g2Ui_event_t u8g2Ui_getUserEvent(void *p);
 
 #endif
