@@ -1,6 +1,6 @@
 #include "u8g2_ui.h"
 
-void u8g2Ui_basic_init(u8g2Ui_basic_t *basic, void (*init)(struct U8G2Ui_BASIC *p), void (*deInit)(struct U8G2Ui_BASIC *p), void (*display)(struct U8G2Ui_BASIC *p), uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue), u8g2Ui_Type_t type)
+void u8g2Ui_basic_init(u8g2Ui_basic_t *basic, u8g2Ui_init_t init, u8g2Ui_deInit_t deInit, u8g2Ui_display_t display, u8g2Ui_event_t event, u8g2Ui_Type_t type)
 {
 
     basic->init = init;
@@ -93,11 +93,11 @@ void u8g2Ui_delete(void *p)
             }
         }
         *u8g2Ui_basic_temp2 = NULL;
-        u8g2Ui_basic_temp->event(u8g2Ui_basic_temp, Ui_eType_delete, 0);
+        u8g2Ui_basic_temp->event(u8g2Ui_basic_temp, u8g2Ui_basic, Ui_eType_delete, 0);
         u8g2Ui_basic_temp->deInit(u8g2Ui_basic_temp);
         u8g2Ui_free(u8g2Ui_basic_temp);
     }
-    u8g2Ui_basic->event(u8g2Ui_basic, Ui_eType_delete, 0);
+    u8g2Ui_basic->event(u8g2Ui_basic, u8g2Ui_basic, Ui_eType_delete, 0);
     u8g2Ui_basic->deInit(u8g2Ui_basic);
     u8g2Ui_free(p);
 }
@@ -236,73 +236,74 @@ void u8g2Ui_setFont(void *p, const uint8_t *font)
     }
     _p->font = font;
 }
-void u8g2Ui_callEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+void u8g2Ui_callEvent(u8g2Ui_basic_t *p, u8g2Ui_eType_t EType, int EValue)
 {
+    u8g2Ui_basic_t * p_launch = p;
     while (p)
     {
-        if(p->userEvent && p->userEvent(p,EType,EValue))
+        if(p->userEvent && p->userEvent(p,p_launch,EType,EValue))
         {
             return;
         }
-        if(p->event && p->event(p,EType,EValue))
+        if(p->event && p->event(p,p_launch,EType,EValue))
         {
             return;
         }
         p = p->p_father;
     }
 }
-uint8_t u8g2Ui_basicEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+uint8_t u8g2Ui_basicEvent(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue)
 {
-    if(!p)
+    if(!p_receive)
         return 0;
     if(EType == Ui_eType_setX)
     {
-        u8g2Ui_setPosSize_x(p,EValue);
+        u8g2Ui_setPosSize_x(p_receive,EValue);
         return 1;
     }
     if(EType == Ui_eType_setY)
     {
-        u8g2Ui_setPosSize_y(p,EValue);
+        u8g2Ui_setPosSize_y(p_receive,EValue);
         return 1;
     }
     if(EType == Ui_eType_setW)
     {
-        u8g2Ui_setPosSize_w(p,EValue);
+        u8g2Ui_setPosSize_w(p_receive,EValue);
         return 1;
     }
     if(EType == Ui_eType_setH)
     {
-        u8g2Ui_setPosSize_h(p,EValue);
+        u8g2Ui_setPosSize_h(p_receive,EValue);
         return 1;
     }
     if(EType == Ui_eType_setFont)
     {
-        u8g2Ui_setFont(p,(const uint8_t *)EValue);
+        u8g2Ui_setFont(p_receive,(const uint8_t *)EValue);
         return 1;
     }
     if(EType == Ui_eType_getX)
     {
-        *(u8g2_long_t*)EValue = u8g2Ui_getPosSize_x(p);
+        *(u8g2_long_t*)EValue = u8g2Ui_getPosSize_x(p_receive);
         return 1;
     }
     if(EType == Ui_eType_getY)
     {
-        *(u8g2_long_t*)EValue = u8g2Ui_getPosSize_y(p);
+        *(u8g2_long_t*)EValue = u8g2Ui_getPosSize_y(p_receive);
         return 1;
     }
     if(EType == Ui_eType_getW)
     {
-        *(u8g2_uint_t*)EValue = u8g2Ui_getPosSize_w(p);
+        *(u8g2_uint_t*)EValue = u8g2Ui_getPosSize_w(p_receive);
         return 1;
     }
     if(EType == Ui_eType_getH)
     {
-        *(u8g2_uint_t*)EValue = u8g2Ui_getPosSize_h(p);
+        *(u8g2_uint_t*)EValue = u8g2Ui_getPosSize_h(p_receive);
         return 1;
     }
     if(EType == Ui_eType_getFont)
     {
-        *(const uint8_t **)EValue = u8g2Ui_getFont(p);
+        *(const uint8_t **)EValue = u8g2Ui_getFont(p_receive);
         return 1;
     }
     return 0;

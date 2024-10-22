@@ -1,7 +1,7 @@
 #include "u8g2_ui.h"
 #ifdef u8g2Ui_paintingFrame_import
 
-void u8g2Ui_paintingFrame_display(struct U8G2Ui_BASIC *p)
+void u8g2Ui_paintingFrame_display(u8g2Ui_basic_t *p)
 {
     u8g2Ui_paintingFrame_t * _p = TYPE_CAST(p, Ui_Type_ui_paintingFrame);
     if (!_p || !_p->cb)
@@ -23,9 +23,9 @@ void u8g2Ui_paintingFrame_display(struct U8G2Ui_BASIC *p)
     
     _p->cb(p, &posSize);
 }
-uint8_t u8g2Ui_paintingFrame_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+uint8_t u8g2Ui_paintingFrame_event(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue)
 {
-    u8g2Ui_paintingFrame_t * _p = TYPE_CAST(p, Ui_Type_ui_paintingFrame);
+    u8g2Ui_paintingFrame_t * _p = TYPE_CAST(p_receive, Ui_Type_ui_paintingFrame);
     if (!_p)
     {
         // todo

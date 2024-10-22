@@ -2,7 +2,7 @@
 #ifdef u8g2Ui_starrySky_import
 #include <stdlib.h>
 
-void u8g2Ui_starrySky_init(struct U8G2Ui_BASIC *p)
+void u8g2Ui_starrySky_init(u8g2Ui_basic_t *p)
 {
     u8g2Ui_starrySky_t *_p = TYPE_CAST(p, Ui_Type_ui_starrySky);
     if (!_p)
@@ -20,7 +20,7 @@ void u8g2Ui_starrySky_init(struct U8G2Ui_BASIC *p)
     srand(_p->maximumQuantity);
     _p->stars = stars;
 }
-void u8g2Ui_starrySky_deInit(struct U8G2Ui_BASIC *p)
+void u8g2Ui_starrySky_deInit(u8g2Ui_basic_t *p)
 {
     u8g2Ui_starrySky_t *_p = TYPE_CAST(p, Ui_Type_ui_starrySky);
     if (!_p)
@@ -34,7 +34,7 @@ void u8g2Ui_starrySky_deInit(struct U8G2Ui_BASIC *p)
     }
     _p->stars = NULL;
 }
-void u8g2Ui_starrySky_display(struct U8G2Ui_BASIC *p)
+void u8g2Ui_starrySky_display(u8g2Ui_basic_t *p)
 {
     u8g2Ui_starrySky_t *_p = TYPE_CAST(p, Ui_Type_ui_starrySky);
     if (!_p || !_p->stars)
@@ -135,15 +135,15 @@ void u8g2Ui_starrySky_display(struct U8G2Ui_BASIC *p)
         }
     }
     
-    if(u8g2Ui_starrySky->starsNum != starsNum)
+    if(_p->starsNum != starsNum)
     {
-        u8g2Ui_starrySky->starsNum = starsNum;
+        _p->starsNum = starsNum;
         u8g2Ui_callEvent(p,Ui_eType_starrySky_starsNumChange,starsNum);
     }
 }
-uint8_t u8g2Ui_starrySky_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+uint8_t u8g2Ui_starrySky_event(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue)
 {
-    u8g2Ui_starrySky_t *_p = TYPE_CAST(p, Ui_Type_ui_starrySky);
+    u8g2Ui_starrySky_t *_p = TYPE_CAST(p_receive, Ui_Type_ui_starrySky);
     if (!_p)
     {
         // todo
@@ -299,6 +299,6 @@ u8g2_uint_t u8g2Ui_starrySky_getStarsNum(void *p)
         // todo
         return 0;
     }
-    return u8g2Ui_starrySky->starsNum;
+    return _p->starsNum;
 }
 #endif

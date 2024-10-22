@@ -46,8 +46,8 @@ typedef enum
     Ui_eType_getW,
     Ui_eType_getH,
     Ui_eType_getFont,
-	
-	// 子模块事件
+
+    // 子模块事件
     Ui_eType_starrySky_starsNumChange,
 } u8g2Ui_eType_t;
 
@@ -67,9 +67,14 @@ typedef struct
     u8g2_uint_t h;
 } u8g2Ui_posSize_t;
 
-typedef uint8_t (*u8g2Ui_event_t)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
+typedef struct U8G2Ui_BASIC u8g2Ui_basic_t;
 
-typedef struct U8G2Ui_BASIC
+typedef void (*u8g2Ui_init_t)(u8g2Ui_basic_t *p);
+typedef void (*u8g2Ui_deInit_t)(u8g2Ui_basic_t *p);
+typedef void (*u8g2Ui_display_t)(u8g2Ui_basic_t *p);
+typedef uint8_t (*u8g2Ui_event_t)(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue);
+
+struct U8G2Ui_BASIC
 {
     struct U8G2Ui_BASIC *p_next;
     struct U8G2Ui_BASIC *p_father;
@@ -79,15 +84,14 @@ typedef struct U8G2Ui_BASIC
     u8g2Ui_posSize_t posSize;
     const uint8_t *font;
 
-    void (*init)(struct U8G2Ui_BASIC *p);
-    void (*deInit)(struct U8G2Ui_BASIC *p);
-    void (*display)(struct U8G2Ui_BASIC *p);
+    u8g2Ui_init_t init;
+    u8g2Ui_deInit_t deInit;
+    u8g2Ui_display_t display;
     u8g2Ui_event_t event;
     u8g2Ui_event_t userEvent;
-
-} u8g2Ui_basic_t;
+};
 /*
-void u8g2Ui_init(struct U8G2Ui_BASIC *p)
+void u8g2Ui_init(u8g2Ui_basic_t *p)
 {
     u8g2Ui_text_t * _p = TYPE_CAST(p, Ui_Type_ui_basic);
     if (!_p)
@@ -96,7 +100,7 @@ void u8g2Ui_init(struct U8G2Ui_BASIC *p)
         return;
     }
 }
-void u8g2Ui_deInit(struct U8G2Ui_BASIC *p)
+void u8g2Ui_deInit(u8g2Ui_basic_t *p)
 {
     u8g2Ui_text_t * _p = TYPE_CAST(p, Ui_Type_ui_basic);
     if (!_p)
@@ -105,7 +109,7 @@ void u8g2Ui_deInit(struct U8G2Ui_BASIC *p)
         return;
     }
 }
-void u8g2Ui_display(struct U8G2Ui_BASIC *p)
+void u8g2Ui_display(u8g2Ui_basic_t *p)
 {
     u8g2Ui_text_t * _p = TYPE_CAST(p, Ui_Type_ui_basic);
     if (!_p)
@@ -114,21 +118,21 @@ void u8g2Ui_display(struct U8G2Ui_BASIC *p)
         return;
     }
 }
-uint8_t u8g2Ui_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+uint8_t u8g2Ui_event(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue)
 {
-    u8g2Ui_text_t * _p = TYPE_CAST(p, Ui_Type_ui_basic);
+    u8g2Ui_text_t * _p = TYPE_CAST(p_receive, Ui_Type_ui_basic);
     if (!_p)
     {
         // todo
         return 0;
     }
-    return u8g2Ui_basicEvent(p,EType,EValue);
+    return u8g2Ui_basicEvent(p_receive,p_launch,EType,EValue);
 }
 */
 /* ----------------------------| u8g2_uiList.c |---------------------------- */
 
-uint8_t u8g2Ui_list_bind(struct U8G2Ui_BASIC *p_father, struct U8G2Ui_BASIC *p);
-uint8_t u8g2Ui_list_unbind(struct U8G2Ui_BASIC *p);
+uint8_t u8g2Ui_list_bind(u8g2Ui_basic_t *p_father, u8g2Ui_basic_t *p);
+uint8_t u8g2Ui_list_unbind(u8g2Ui_basic_t *p);
 
 /* ----------------------------| u8g2_ui.c |---------------------------- */
 
@@ -202,21 +206,21 @@ typedef struct
     float x;
     float y;
     u8g2_int_t siz;
-    
+
     u8g2_uint_t effective;
 } u8g2_stars_t;
 
 typedef struct
 {
     u8g2Ui_basic_t basic;
-    u8g2_stars_t * stars;
+    u8g2_stars_t *stars;
     size_t maximumQuantity;
-    
+
     float spe;
     u8g2_uint_t dir;
     u8g2_uint_t genProb;
     u8g2_uint_t maxSize;
-    
+
     u8g2_uint_t starsNum;
 } u8g2Ui_starrySky_t;
 
@@ -236,7 +240,7 @@ u8g2_uint_t u8g2Ui_starrySky_getStarsNum(void *p);
 #endif
 /* ----------------------------| u8g2_uiCore.c |---------------------------- */
 
-void u8g2Ui_basic_init(u8g2Ui_basic_t *basic, void (*init)(struct U8G2Ui_BASIC *p), void (*deInit)(struct U8G2Ui_BASIC *p), void (*display)(struct U8G2Ui_BASIC *p), uint8_t (*event)(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue), u8g2Ui_Type_t type);
+void u8g2Ui_basic_init(u8g2Ui_basic_t *basic, u8g2Ui_init_t init, u8g2Ui_deInit_t deInit, u8g2Ui_display_t display, u8g2Ui_event_t event, u8g2Ui_Type_t type);
 void u8g2Ui_init(u8g2Ui_t *p);
 void u8g2Ui_run(u8g2Ui_t *p);
 void u8g2Ui_delete(void *p);
@@ -254,8 +258,8 @@ u8g2_uint_t u8g2Ui_getPosSize_w(void *p);
 void u8g2Ui_setPosSize_w(void *p, u8g2_uint_t w);
 const uint8_t *u8g2Ui_getFont(void *p);
 void u8g2Ui_setFont(void *p, const uint8_t *font);
-void u8g2Ui_callEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
-uint8_t u8g2Ui_basicEvent(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue);
+void u8g2Ui_callEvent(u8g2Ui_basic_t *p, u8g2Ui_eType_t EType, int EValue);
+uint8_t u8g2Ui_basicEvent(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue);
 void u8g2Ui_setUserEvent(void *p, u8g2Ui_event_t userEvent);
 u8g2Ui_event_t u8g2Ui_getUserEvent(void *p);
 

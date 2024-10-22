@@ -1,28 +1,28 @@
 #include "u8g2_ui.h"
 
-void u8g2Ui_Init(struct U8G2Ui_BASIC *p)
+void u8g2Ui_Init(u8g2Ui_basic_t *p)
 {
     if (!p && p->type == Ui_Type_ui)
         return;
     u8g2Ui_t *u8g2Ui = (u8g2Ui_t *)p;
     oled_u8g2_init(&u8g2Ui->u8g2);
 }
-void u8g2Ui_deInit(struct U8G2Ui_BASIC *p)
+void u8g2Ui_deInit(u8g2Ui_basic_t *p)
 {
     if (!p && p->type == Ui_Type_ui)
         return;
 }
-void u8g2Ui_display(struct U8G2Ui_BASIC *p)
+void u8g2Ui_display(u8g2Ui_basic_t *p)
 {
     if (!p && p->type == Ui_Type_ui)
         return;
     u8g2Ui_clipWindow(p);
 }
-uint8_t u8g2Ui_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+uint8_t u8g2Ui_event(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue)
 {
-    if (!p && p->type == Ui_Type_ui)
+    if (!p_receive && p_receive->type == Ui_Type_ui)
         return 0;
-    return u8g2Ui_basicEvent(p,EType,EValue);
+    return u8g2Ui_basicEvent(p_receive,p_launch,EType,EValue);
 }
 
 u8g2Ui_t *new_u8g2Ui(void)

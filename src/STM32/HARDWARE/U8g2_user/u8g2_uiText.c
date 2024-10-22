@@ -35,7 +35,7 @@ char *my_strtok(char *text, char c)
     return q;
 }
 
-void u8g2Ui_text_init(struct U8G2Ui_BASIC *p)
+void u8g2Ui_text_init(u8g2Ui_basic_t *p)
 {
     u8g2Ui_text_t *_p = TYPE_CAST(p, Ui_Type_ui_text);
     if (!_p)
@@ -44,7 +44,7 @@ void u8g2Ui_text_init(struct U8G2Ui_BASIC *p)
         return;
     }
 }
-void u8g2Ui_text_deInit(struct U8G2Ui_BASIC *p)
+void u8g2Ui_text_deInit(u8g2Ui_basic_t *p)
 {
     u8g2Ui_text_t *_p = TYPE_CAST(p, Ui_Type_ui_text);
     if (!_p)
@@ -57,7 +57,7 @@ void u8g2Ui_text_deInit(struct U8G2Ui_BASIC *p)
         u8g2Ui_free(_p->text);
     }
 }
-void u8g2Ui_text_display(struct U8G2Ui_BASIC *p)
+void u8g2Ui_text_display(u8g2Ui_basic_t *p)
 {
     u8g2Ui_text_t *_p = TYPE_CAST(p, Ui_Type_ui_text);
     if (!_p || !_p->isVisible)
@@ -91,9 +91,9 @@ void u8g2Ui_text_display(struct U8G2Ui_BASIC *p)
         u8g2_DrawUTF8(u8g2, posSize.x, posSize.y, _p->text);
     }
 }
-uint8_t u8g2Ui_text_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EValue)
+uint8_t u8g2Ui_text_event(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue)
 {
-    u8g2Ui_text_t *_p = TYPE_CAST(p, Ui_Type_ui_text);
+    u8g2Ui_text_t *_p = TYPE_CAST(p_receive, Ui_Type_ui_text);
     if (!_p)
     {
         // todo
@@ -109,7 +109,7 @@ uint8_t u8g2Ui_text_event(struct U8G2Ui_BASIC *p, u8g2Ui_eType_t EType, int EVal
         *(u8g2_uint_t*)EValue = u8g2Ui_text_get_contentW(_p);
         return 1;
     }
-    return u8g2Ui_basicEvent(p, EType, EValue);
+    return u8g2Ui_basicEvent(p_receive, p_launch, EType, EValue);
 }
 
 u8g2Ui_text_t *new_u8g2Ui_text(void *p, char *text)
