@@ -60,3 +60,5 @@ src/STM32/USER/LED.uvguix.W07
 src/STM32/USER/LED.uvoptx
 src/STM32/USER/LED.uvprojx
 src/STM32/USER/startup_stm32f10x_md.lst
+src/STM32/USER/.vscode/c_cpp_properties.json
+src/STM32/USER/.vscode/keil-assistant.log

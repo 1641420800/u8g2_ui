@@ -11,7 +11,8 @@
 #define u8g2Ui_free free
 #define u8g2Ui_realloc realloc
 
-#define u8g2Ui_fastMode
+// todo : 暂不支持
+// #define u8g2Ui_fastMode
 
 #define u8g2Ui_layer_import
 #define u8g2Ui_text_import
@@ -157,6 +158,7 @@ u8g2_t *u8g2Ui_getU8g2(void *p);
     } while (0)
 void u8g2Ui_startLayer(u8g2_t *u8g2);
 void u8g2Ui_endLayer(Layer_t layer);
+void u8g2Ui_callDisplay(u8g2Ui_basic_t *p);
 
 #endif
 /* ----------------------------| u8g2_uiText.c |---------------------------- */

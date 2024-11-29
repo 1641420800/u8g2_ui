@@ -6,7 +6,9 @@
         "stdlib.h": "c",
         "stdio.h": "c",
         "u8g2_uihal.h": "c",
-        "iic_oled.h": "c"
+        "iic_oled.h": "c",
+        "delay.h": "c",
+        "gpio.h": "c"
     },
     "C_Cpp.default.compilerPath": ""
 }

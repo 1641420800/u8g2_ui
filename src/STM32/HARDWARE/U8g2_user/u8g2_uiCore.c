@@ -24,8 +24,7 @@ void u8g2_ui_run_display(u8g2Ui_basic_t *p)
 {
     while (p)
     {
-        if (p->display)
-            p->display(p);
+        u8g2Ui_callDisplay(p);
         if (p->p_son)
             u8g2_ui_run_display(p->p_son);
         p = p->p_next;
