@@ -50,3 +50,13 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+*.crf
+*.axf
+*.htm
+*.lnp
+*.sct
+*.dep
+src/STM32/USER/LED.uvguix.W07
+src/STM32/USER/LED.uvoptx
+src/STM32/USER/LED.uvprojx
+src/STM32/USER/startup_stm32f10x_md.lst
