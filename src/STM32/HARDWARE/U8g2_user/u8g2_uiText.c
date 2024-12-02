@@ -75,7 +75,7 @@ void u8g2Ui_text_display(u8g2Ui_basic_t *p)
     if (_p->isMultiline)
     {
         char *token = my_strtok(_p->text, '\n');
-        u8g2_uint_t y = 0;
+        u8g2_uint_t y = u8g2_GetMaxCharHeight(u8g2);
         while (token != NULL)
         {
             u8g2_DrawUTF8(u8g2, 0, y, token);
@@ -85,7 +85,7 @@ void u8g2Ui_text_display(u8g2Ui_basic_t *p)
     }
     else
     {
-        u8g2_DrawUTF8(u8g2, 0, 0, _p->text);
+        u8g2_DrawUTF8(u8g2, 0, u8g2_GetMaxCharHeight(u8g2), _p->text);
     }
 }
 uint8_t u8g2Ui_text_event(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue)

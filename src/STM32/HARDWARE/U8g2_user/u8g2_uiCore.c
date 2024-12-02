@@ -22,9 +22,11 @@ void u8g2Ui_basic_init(u8g2Ui_basic_t *basic, u8g2Ui_init_t init, u8g2Ui_deInit_
 
 void u8g2_ui_run_display(u8g2Ui_basic_t *p)
 {
+    u8g2_t *_p = u8g2Ui_getU8g2(p);
     while (p)
     {
         u8g2Ui_callDisplay(p);
+        u8g2_SendBuffer(_p);
         if (p->p_son)
             u8g2_ui_run_display(p->p_son);
         p = p->p_next;
