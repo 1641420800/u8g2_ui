@@ -50,8 +50,6 @@ void u8g2Ui_starrySky_display(u8g2Ui_basic_t *p)
     }
     u8g2Ui_posSize_t posSize;
     u8g2Ui_getClipPosSize(p, &posSize);
-    u8g2Ui_clipWindow(p);
-    u8g2_SetFont(u8g2, u8g2_font_8x13_mf);
     posSize.y += u8g2_GetAscent(u8g2);
 
 #ifdef u8g2Ui_fastMode
@@ -131,7 +129,7 @@ void u8g2Ui_starrySky_display(u8g2Ui_basic_t *p)
         if (_p->stars[i].effective)
         {
             starsNum++;
-            u8g2_DrawDisc(u8g2, posSize.x + _p->stars[i].x, posSize.y + _p->stars[i].y, _p->stars[i].siz + 1, U8G2_DRAW_ALL);
+            u8g2_DrawDisc(u8g2, _p->stars[i].x, _p->stars[i].y, _p->stars[i].siz + 1, U8G2_DRAW_ALL);
         }
     }
     

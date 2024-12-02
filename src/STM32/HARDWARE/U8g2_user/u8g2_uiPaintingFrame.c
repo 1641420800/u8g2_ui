@@ -15,13 +15,9 @@ void u8g2Ui_paintingFrame_display(u8g2Ui_basic_t *p)
     // todo
     return;
     }
-    u8g2Ui_posSize_t posSize;
-    u8g2Ui_getClipPosSize(p, &posSize);
-    u8g2Ui_clipWindow(p);
     u8g2_SetFont(u8g2,u8g2_font_8x13_mf);
-    posSize.y += u8g2_GetAscent(u8g2);
     
-    _p->cb(p, &posSize);
+    _p->cb(u8g2, p->posSize.w, p->posSize.h);
 }
 uint8_t u8g2Ui_paintingFrame_event(u8g2Ui_basic_t *p_receive, u8g2Ui_basic_t *p_launch, u8g2Ui_eType_t EType, int EValue)
 {

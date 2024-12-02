@@ -101,52 +101,6 @@ void u8g2Ui_delete(void *p)
     u8g2Ui_free(p);
 }
 
-void u8g2Ui_getClipPosSize(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize)
-{
-    if (!p)
-        return;
-    u8g2Ui_posSize_t _posSize = p->posSize;
-    p = p->p_father;
-    while (p)
-    {
-        _posSize.x += p->posSize.x;
-        _posSize.y += p->posSize.y;
-        p = p->p_father;
-    }
-    *posSize = _posSize;
-}
-void u8g2Ui_clipWindow(u8g2Ui_basic_t *p)
-{
-    if (!p)
-        return;
-    u8g2_t *u8g2 = u8g2Ui_getU8g2(p);
-    if (!u8g2)
-        return;
-    u8g2Ui_posSize_t _posSize = p->posSize;
-    u8g2_long_t x_max = _posSize.x > 0 ? _posSize.x : 0;
-    u8g2_long_t y_max = _posSize.y > 0 ? _posSize.y : 0;
-    p = p->p_father;
-    while (p)
-    {
-        _posSize.x += p->posSize.x;
-        _posSize.y += p->posSize.y;
-        x_max += p->posSize.x;
-        y_max += p->posSize.x;
-        if(x_max < 0) x_max = 0;
-        if(y_max < 0) y_max = 0;
-        u8g2_long_t x0 = _posSize.x + _posSize.w;
-        u8g2_long_t y0 = _posSize.y + _posSize.h;
-        u8g2_long_t x1 = p->posSize.x + p->posSize.w;
-        u8g2_long_t y1 = p->posSize.y + p->posSize.h;
-        _posSize.w = (x0 < x1 ? x0 : x1) - _posSize.x;
-        _posSize.h = (y0 < y1 ? y0 : y1) - _posSize.y;
-        p = p->p_father;
-    }
-    _posSize.x = x_max;
-    _posSize.y = y_max;
-    u8g2_SetClipWindow(u8g2, _posSize.x, _posSize.y, _posSize.x + _posSize.w, _posSize.y + _posSize.h);
-}
-
 void u8g2Ui_getPosSize(void *p, u8g2Ui_posSize_t *posSize)
 {
     u8g2Ui_basic_t *_p = p;

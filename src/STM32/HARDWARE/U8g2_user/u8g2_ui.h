@@ -149,15 +149,7 @@ u8g2_t *u8g2Ui_getU8g2(void *p);
 /* ----------------------------| u8g2_uiLayer.c |---------------------------- */
 #ifdef u8g2Ui_layer_import
 
-#define layer(u8g2, layer, p)    \
-    do                           \
-    {                            \
-        u8g2Ui_startLayer(u8g2); \
-        p;                       \
-        u8g2Ui_endLayer(layer);  \
-    } while (0)
-void u8g2Ui_startLayer(u8g2_t *u8g2);
-void u8g2Ui_endLayer(Layer_t layer);
+void u8g2Ui_getClipPosSize(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize);
 void u8g2Ui_callDisplay(u8g2Ui_basic_t *p);
 
 #endif
@@ -189,7 +181,7 @@ u8g2_uint_t u8g2Ui_text_get_contentW(void *p);
 /* ----------------------------| u8g2_uiPaintingFrame.c |---------------------------- */
 #ifdef u8g2Ui_paintingFrame_import
 
-typedef void (*PaintingFrame_cb)(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize);
+typedef void (*PaintingFrame_cb)(u8g2_t *u8g2, u8g2_uint_t w, u8g2_uint_t h);
 typedef struct
 {
     u8g2Ui_basic_t basic;
@@ -246,8 +238,6 @@ void u8g2Ui_basic_init(u8g2Ui_basic_t *basic, u8g2Ui_init_t init, u8g2Ui_deInit_
 void u8g2Ui_init(u8g2Ui_t *p);
 void u8g2Ui_run(u8g2Ui_t *p);
 void u8g2Ui_delete(void *p);
-void u8g2Ui_getClipPosSize(u8g2Ui_basic_t *p, u8g2Ui_posSize_t *posSize);
-void u8g2Ui_clipWindow(u8g2Ui_basic_t *p);
 void u8g2Ui_getPosSize(void *p, u8g2Ui_posSize_t *posSize);
 void u8g2Ui_setPosSize(void *p, u8g2Ui_posSize_t *posSize);
 u8g2_long_t u8g2Ui_getPosSize_x(void *p);
